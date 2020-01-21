@@ -1,0 +1,12 @@
+name: test-idiom
+
+on: [push]
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - run: git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
+      - run: xz -d mecab-ipadic-neologd/seed/*.xz
+      - run: cat mecab-ipadic-neologd/seed/*.csv | grep -v 人名 |cut -d ',' -f 11 | grep -P '^\p{Han}{2}$'| sort | uniq | tee result
+      - run: wc -l result
